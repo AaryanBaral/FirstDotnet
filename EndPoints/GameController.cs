@@ -3,7 +3,7 @@ using FirstCrudApp.Entities;
 using FirstCrudApp.Mappers;
 using FirstCrudApp.Repositories;
 
-namespace FirstCrudApp.Controller
+namespace FirstCrudApp.EndPoints
 {
     public static class GameController
     {
@@ -13,10 +13,10 @@ namespace FirstCrudApp.Controller
             // Mapping routes with common path
             var gamesRoute = routes.MapGroup("/games").WithParameterValidation();
 
-            gamesRoute.MapGet("/", (IGameRepository repository) =>repository.GetAllGames().Select(game=> game.ToDto()));
-            gamesRoute.MapGet("/{id}", (IGameRepository repository, int id) =>
+            gamesRoute.MapGet("/", async (IGameRepository repository) =>(await repository.GetAllGamesAsync()).Select(game=> game.ToDto()));
+            gamesRoute.MapGet("/{id}", async(IGameRepository repository, int id) =>
             {
-                Game? game = repository.GetGameById(id);
+                Game? game = await repository.GetGameByIdAsync(id);
                 if(game is null){
                     return Results.NotFound();
                 }
@@ -24,7 +24,7 @@ namespace FirstCrudApp.Controller
 
             }).WithName("GameIdRoute");
 
-            gamesRoute.MapPost("/", (IGameRepository repository,CreateGameDto gameDto) =>
+            gamesRoute.MapPost("/", async (IGameRepository repository,CreateGameDto gameDto) =>
             {
                 Game game = new(){
                     Name=gameDto.Name,
@@ -33,29 +33,29 @@ namespace FirstCrudApp.Controller
                     ReleaseDate=gameDto.ReleaseDate,
                     ImageUrl=gameDto.ImageUrl,
                 };
-                repository.CreateGame(game);
+                await repository.CreateGameAsync(game);
                 return Results.CreatedAtRoute("GameIdRoute", new { id = game.Id }, game);
             });
 
-            gamesRoute.MapDelete("/{id}", (int id,IGameRepository repository) =>
+            gamesRoute.MapDelete("/{id}", async(int id,IGameRepository repository) =>
             {
-                Game? game = repository.GetGameById(id);
+                Game? game = await repository.GetGameByIdAsync(id);
                 if (game is null) return Results.NotFound();
-                repository.DeleteGame(id);
+                await repository.DeleteGameAsync(id);
                 return Results.Content("Deleted Sucessfully");
 
             });
 
-            routes.MapPut("/games/{id}", (int id, UpdateGameDto updatedGameDto,IGameRepository repository) =>
+            routes.MapPut("/games/{id}", async(int id, UpdateGameDto updatedGameDto,IGameRepository repository) =>
             {
-                Game? existingGame = repository.GetGameById(id);
+                Game? existingGame = await repository.GetGameByIdAsync(id);
                 if (existingGame is null) return Results.NotFound();
                 existingGame.Name = updatedGameDto.Name;
                 existingGame.Price = updatedGameDto.Price;
                 existingGame.Genre = updatedGameDto.Genre;
                 existingGame.ReleaseDate = updatedGameDto.ReleaseDate;
                 existingGame.ImageUrl = updatedGameDto.ImageUrl;
-                repository.UpdateGame(existingGame);
+                await repository.UpdateGameAsync(existingGame);
                 return Results.Content("updated Sucessfully");
             });
             return gamesRoute;

@@ -16,4 +16,6 @@ public class GameStoreContext : DbContext
         modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
     }
 
+    
+
 }

@@ -7,9 +7,9 @@ using FirstCrudApp.Entities;
 namespace FirstCrudApp.Repositories;
     public interface IGameRepository
     {
-        void CreateGame(Game game);
-        void DeleteGame(int id);
-        void UpdateGame(Game updatedGame);
-        Game? GetGameById(int id);
-        IEnumerable<Game> GetAllGames(); 
+        Task CreateGameAsync(Game game);
+        Task DeleteGameAsync(int id);
+        Task UpdateGameAsync(Game updatedGame);
+        Task<Game?> GetGameByIdAsync(int id);
+        Task<IEnumerable<Game>> GetAllGamesAsync(); 
     }

@@ -10,30 +10,31 @@ public class InDbGameRepository(GameStoreContext dbContext) : IGameRepository
 {
     private readonly GameStoreContext _dbContext = dbContext;
 
-    public void CreateGame(Game game)
+    public async Task CreateGameAsync(Game game)
     {
-        _dbContext.Games.Add(game);
-        _dbContext.SaveChanges();
+        await _dbContext.Games.AddAsync(game);
+        await _dbContext.SaveChangesAsync();
     }
 
-    public void DeleteGame(int id)
+    public async Task DeleteGameAsync(int id)
     {
-        _dbContext.Games.Where(game=> game.Id == id)
-        .ExecuteDelete();
+        await _dbContext.Games.Where(game=> game.Id == id)
+        .ExecuteDeleteAsync();
     }
 
-    public IEnumerable<Game> GetAllGames()
+    public async Task<IEnumerable<Game>> GetAllGamesAsync()
     {
-        return [.. _dbContext.Games.AsNoTracking()];
+        return await  _dbContext.Games.AsNoTracking().ToListAsync();
     }
 
-    public Game? GetGameById(int id)
+    public async Task<Game?> GetGameByIdAsync(int id)
     {
-        return _dbContext.Games.Find(id);
+        return await _dbContext.Games.FindAsync(id);
     }
 
-    public void UpdateGame(Game updatedGame)
+    public async Task UpdateGameAsync(Game updatedGame)
     {
-        throw new NotImplementedException();
+       _dbContext.Update(updatedGame);
+        await _dbContext.SaveChangesAsync();
     }
 }

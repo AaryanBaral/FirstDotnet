@@ -2,7 +2,7 @@
 ## Starting SQL Server
 ``` powershell
     $sa_password = "[SA Password Here]"
-    docker run -e "ACCEPT_EULA=Y" -e "MSSQL_SA_PASSWORD=Pass@word123" -e "MSSQL_PID=Evaluation" -p 1433:1433 -v sqlvolume:/var/pot/mssql  --name mssql --hostname sqlpreview -d --rm mcr.microsoft.com/mssql/server:2022-preview-ubuntu-22.04
+    docker run -e "ACCEPT_EULA=Y" -e "MSSQL_SA_PASSWORD=Pass@word123" -e "MSSQL_PID=Evaluation" -p 1433:1433 -v sqlvolume:/var/pot/mssql   --hostname sqlpreview -d --rm --name mssql mcr.microsoft.com/mssql/server:2022-preview-ubuntu-22.04
 
 ```
 ``` powershell

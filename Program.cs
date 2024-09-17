@@ -1,25 +1,18 @@
-using FirstCrudApp.Controller;
 using FirstCrudApp.Data;
-using FirstCrudApp.Repositories;
-using Microsoft.EntityFrameworkCore;
+using FirstCrudApp.EndPoints;
 
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Repositories => used to register servies under repositories to the application itself
-builder.Services.AddSingleton<IGameRepository, InDbGameRepository>();
-
-// Data/GameStoreContext ==> used to connect to the database
-var ConnString = builder.Configuration.GetConnectionString("GameStoreContext");
-builder.Services.AddSqlServer<GameStoreContext>(ConnString);
+// Data/DataExtension, AddRepositories ==> to inject repositories as dependencies in the app
+builder.Services.AddRepositories(builder.Configuration);
 
 
 // build the application
 var app = builder.Build();
 
 // data/ DataExtension ==> used for automatic db migration whenever the application starts up
-
-app.Services.InitializeDb();
+await app.Services.InitializeDbAsync();
 
 
 // Add mappings and routings

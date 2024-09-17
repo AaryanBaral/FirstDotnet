@@ -35,22 +35,25 @@ namespace FirstCrudApp.Repositories
     },
 
 ];
-        public void CreateGame(Game game)
+        public async Task CreateGameAsync(Game game)
         {
             game.Id = games.Max(t=>t.Id)+1;
             games.Add(game);
+            await Task.CompletedTask;
+
         }
-        public void DeleteGame(int id) => games.RemoveAll(t => t.Id == id);
-        public void UpdateGame(Game updatedGame)
+        public Task DeleteGameAsync(int id) => Task.FromResult(games.RemoveAll(t => t.Id == id));
+        public async Task UpdateGameAsync(Game updatedGame)
         {
             var index = games.FindIndex(t => t.Id == updatedGame.Id);
             games[index] = updatedGame;
+            await Task.CompletedTask;
         }
-        public Game? GetGameById(int id)
+        public Task<Game?> GetGameByIdAsync(int id)
         {
             Game? game = games.Find(t => t.Id == id);
-            return game;
+            return Task.FromResult(game);
         }
-        public IEnumerable<Game> GetAllGames() => games;
+        public async Task<IEnumerable<Game>> GetAllGamesAsync() => await Task.FromResult(games);
     }
 }
