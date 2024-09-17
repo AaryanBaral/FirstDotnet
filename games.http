@@ -1,0 +1,19 @@
+###
+GET http://localhost:5018/
+
+
+###
+GET http://localhost:5018/games/
+
+###
+POST  http://localhost:5018/games/
+Content-Type: application/json
+
+{
+    "name":"Solo Leveling",
+    "price":199.99,
+    "genre":"Survival",
+    "ReleaseDate" :"2021-12-01",
+    "ImageUrl" : "https://placehold.co/100"
+
+}
